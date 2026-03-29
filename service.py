@@ -154,6 +154,7 @@ class ClassificationService:
 
         try:
             # ── Preprocess ──────────────────────────────────
+            text = str(text)
             sequence        = resources['tokenizer'].texts_to_sequences([text])
             padded_sequence = pad_sequences(sequence, maxlen=max_len, padding='post')
 
