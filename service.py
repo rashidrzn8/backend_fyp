@@ -259,6 +259,10 @@ class ClassificationService:
             texts  = df[text_col].astype(str).str.strip().tolist()
             labels = df[label_col].astype(str).str.strip().tolist()
             
+            # Force all labels to string type early (handle float NaN/values)
+            labels = [str(l) for l in labels]
+            texts  = [str(t) for t in texts]
+            
             # Filter out empty or NaN-cast rows
             valid_pairs = [
                 (t, l) for t, l in zip(texts, labels)
