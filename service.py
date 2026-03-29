@@ -252,8 +252,24 @@ class ClassificationService:
                 }
 
             print(f"  Text column: '{text_col}' | Label column: '{label_col}'")
-            texts  = df[text_col].astype(str).tolist()
-            labels = df[label_col].astype(str).tolist()
+            
+            # Drop rows where either column is null
+            df = df[[text_col, label_col]].dropna()
+            
+            texts  = df[text_col].astype(str).str.strip().tolist()
+            labels = df[label_col].astype(str).str.strip().tolist()
+            
+            # Filter out empty or NaN-cast rows
+            valid_pairs = [
+                (t, l) for t, l in zip(texts, labels)
+                if t and l and t.lower() != 'nan' and l.lower() != 'nan'
+            ]
+            if not valid_pairs:
+                return {"error": "No valid rows found after cleaning text/label columns."}
+            
+            texts, labels = map(list, zip(*valid_pairs))
+            texts  = [t.lower() for t in texts]
+            labels = [l.lower() for l in labels]
 
             # ── Encode labels ────────────────────────────────
             encoder = LabelEncoder()
