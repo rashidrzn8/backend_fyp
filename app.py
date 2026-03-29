@@ -60,7 +60,7 @@ def process_input():
     if not data:
         return jsonify({"error": "No JSON data provided"}), 400
 
-    user_input = data.get('input')
+    user_input = str(data.get('input', ''))
     domain     = data.get('domain', 'base')
 
     if not user_input:
